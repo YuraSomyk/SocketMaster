@@ -1,45 +1,39 @@
-﻿using System;
+﻿using Server.Model;
+using System;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
 namespace Server.Services {
+    public class ClientService {
 
-    public class Client {
+        public Client Init(Socket socket, Client client) {
+            client.Socket = socket;
+            client.Thread = new Thread(() => Listner(client));
+            client.Thread.IsBackground = true;
+            client.Thread.Start();
 
-        public string Name { get; set; }
-
-        public Socket Socket { get; set; }
-
-        public Thread Thread { get; set; }
-
-        public Client Connect(Socket socket) {
-            this.Socket = socket;
-            this.Thread = new Thread(()=> Listner());
-            this.Thread.IsBackground = true;
-            this.Thread.Start();
-
-            return this;
+            return client;
         }
 
-        public void Disconnect() {
+        public void Disconnect(Client client) {
             try {
-                this.Socket.Close();
-                this.Thread.Abort();
+                client.Socket.Close();
+                client.Thread.Abort();
             } catch (Exception exp) { 
                 Console.WriteLine("Error with end: {0}.", exp.Message); 
             }
         }
 
-        private void Listner() {
+        private void Listner(Client client) {
             while (true) {
                 try {
                     byte[] buffer = new byte[1024];
-                    int bytesRec = this.Socket.Receive(buffer);
+                    int bytesRec = client.Socket.Receive(buffer);
                     string data = Encoding.UTF8.GetString(buffer, 0, bytesRec);
                     handleCommand(data);
                 } catch { 
-                    Server.DisconnectClinet(this); 
+                    //Server.Disconnect(client); 
                     return; 
                 }
             }
@@ -49,13 +43,13 @@ namespace Server.Services {
             Console.WriteLine(data);
         }
 
-        public void Send(string command) {
+        public void SendMessage(string command, Client client) {
             try {
-                int bytesSent = this.Socket.Send(Encoding.UTF8.GetBytes(command));
+                int bytesSent = client.Socket.Send(Encoding.UTF8.GetBytes(command));
                 if (bytesSent > 0) Console.WriteLine("Success");
             } catch (Exception exp) { 
                 Console.WriteLine("Error with send command: {0}.", exp.Message); 
-                Server.DisconnectClinet(client); 
+                //Server.DisconnectClinet(client); 
             }
         }
     }
