@@ -1,10 +1,16 @@
-﻿using System;
+﻿using Client.Services;
 
-namespace Client {
-
+namespace Client { 
     class Program {
+        static bool isMenu = true;
+
         static void Main(string[] args) {
-            Console.WriteLine("Hello World!");
+            var server = new Server();
+            var menu = new Menu();
+
+            while (isMenu) {
+                isMenu = menu.GetMenu(server);
+            }
         }
     }
 }
