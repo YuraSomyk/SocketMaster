@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Client.Parsing;
+using Client.Parsing.Exceptions;
+using System;
 
 namespace Client.Services {
     public class Menu {
@@ -55,16 +57,19 @@ namespace Client.Services {
         }
 
         private void SendMessage(Server server) {
-            try {
+            try
+            {
                 Console.Write("Введіть повідомлення :");
-                var message = Console.ReadLine();
+                var message = StringParsing.TryToParse(Console.ReadLine());
 
-                if (!server.IsConnection) throw new Exception(); 
-
+                if (!server.IsConnection) throw new Exception();
+                
                 server.SendMessage(message);
 
                 Console.WriteLine("Повідомлення надіслано!");
-            } catch {
+            } catch (ParsingException) {
+                Console.WriteLine("Введіть ціле число!");
+            } catch (Exception) {
                 Console.WriteLine("Не вдалося надіслати!");
             }
         }

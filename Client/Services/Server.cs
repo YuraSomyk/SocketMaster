@@ -42,9 +42,9 @@ namespace Client.Services {
             }
         }
 
-        public bool SendMessage(string message) {
+        public bool SendMessage(int message) {
             try {
-                byte[] buffer = Encoding.UTF8.GetBytes(message);
+                byte[] buffer = Encoding.UTF8.GetBytes(message.ToString());
                 int bytesSent = Socket.Send(buffer);
                 return true;
             } catch (Exception exception) {
