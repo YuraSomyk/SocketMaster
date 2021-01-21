@@ -36,10 +36,6 @@ namespace Client.Services {
                     Console.ReadLine();
                     return true;
                 case 3:
-                    Console.WriteLine("Summ: " + "299");
-                    Console.ReadLine();
-                    return true;
-                case 4:
                     return false;
             }
 
@@ -48,8 +44,10 @@ namespace Client.Services {
 
         private void Connection(Server server) {
             try {
-                if (server.Connect()) {
+                if (!server.IsConnection && server.Connect()) {
                     Console.WriteLine("З'єднання встановлено!");
+                } else {
+                    Console.WriteLine("З'єднання було встановлено швидше!");
                 }
             } catch {
                 Console.WriteLine("Не вдалося встановити з'єднання!");
@@ -68,6 +66,15 @@ namespace Client.Services {
                 Console.WriteLine("Повідомлення надіслано!");
             } catch {
                 Console.WriteLine("Не вдалося надіслати!");
+            }
+        }
+
+        public void Disconect(Server server) {
+            try {
+                server.Disconnect();
+                Console.WriteLine("З'єднання розірвано!");
+            } catch (Exception ex) {
+                Console.WriteLine(ex.Message);
             }
         }
     }

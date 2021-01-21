@@ -5,16 +5,14 @@ using System.Threading;
 
 namespace Server {
     class Program {
-        static Model.Server server;
         static ServerService serverService;
 
         static void Main(string[] args) {
-            server = new Model.Server();
             serverService = new ServerService();
 
-            server.Thread = new Thread(() => serverService.Start(server));
-            server.Thread.IsBackground = true;
-            server.Thread.Start();
+            Model.Server.Thread = new Thread(() => serverService.Start());
+            Model.Server.Thread.IsBackground = true;
+            Model.Server.Thread.Start();
 
             while (true) {
                 serverService.Commands(Console.ReadLine());

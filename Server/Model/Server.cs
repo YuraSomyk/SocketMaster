@@ -3,16 +3,18 @@ using System.Net.Sockets;
 using System.Threading;
 
 namespace Server.Model {
-    public class Server {
+    public static class Server {
 
-        public string Host {get; set; }
+        public static string Host {get; set; }
 
-        public int Port { get; set; }
+        public static int Port { get; set; }
 
-        public Socket Socket { get; set; }
+        public static int Counter { get; set; } = 0;
 
-        public Thread Thread { get; set; }
+        public static Socket Socket { get; set; }
 
-        public List<Client> ConnectClients = new List<Client>();
+        public static Thread Thread { get; set; }
+
+        public static List<Client> ConnectClients = new List<Client>();
     }
 }

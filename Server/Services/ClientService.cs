@@ -6,9 +6,9 @@ using System.Threading;
 
 namespace Server.Services {
     public class ClientService {
-
         public Client Init(Socket socket, Client client) {
             client.Socket = socket;
+            client.Name = socket.LocalEndPoint.ToString();
             client.Thread = new Thread(() => Listner(client));
             client.Thread.IsBackground = true;
             client.Thread.Start();
@@ -31,16 +31,17 @@ namespace Server.Services {
                     byte[] buffer = new byte[1024];
                     int bytesRec = client.Socket.Receive(buffer);
                     string data = Encoding.UTF8.GetString(buffer, 0, bytesRec);
-                    handleCommand(data);
+                    int message = Convert.ToInt32(data);
+                    Model.Server.Counter = Increment(Model.Server.Counter, message);
+                    Console.WriteLine(Model.Server.Counter);
                 } catch { 
-                    //Server.Disconnect(client); 
                     return; 
                 }
             }
         }
 
-        private void handleCommand(string data) {
-            Console.WriteLine(data);
+        private int Increment(int count, int message) {
+            return count + message;
         }
 
         public void SendMessage(string command, Client client) {
@@ -49,7 +50,6 @@ namespace Server.Services {
                 if (bytesSent > 0) Console.WriteLine("Success");
             } catch (Exception exp) { 
                 Console.WriteLine("Error with send command: {0}.", exp.Message); 
-                //Server.DisconnectClinet(client); 
             }
         }
     }

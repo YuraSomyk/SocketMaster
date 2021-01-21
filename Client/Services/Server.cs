@@ -32,6 +32,16 @@ namespace Client.Services {
             }
         }
 
+        public bool Disconnect() {
+            try {
+                Socket.Close();
+                IsConnection = false;
+                return IsConnection;
+            } catch (Exception exception) {
+                throw exception;
+            }
+        }
+
         public bool SendMessage(string message) {
             try {
                 byte[] buffer = Encoding.UTF8.GetBytes(message);
